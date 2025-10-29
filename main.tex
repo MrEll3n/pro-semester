@@ -65,17 +65,35 @@
 % =====================================
 
 \section{Úvod}
-Tato práce vychází ze článku \textit{Time-Efficient A* Algorithm for Robot Path Planning}\cite{MainWork}, která pojednává o problematice efektivního využití algoritmu A* pro plánování trasy robotů v průmyslu. Tento dokument je psán tak, aby důležité informace byly pochopitelné pro studenta 2. ročníku informatiky.
+Tato práce vychází ze článku \textit{Time-Efficient A* Algorithm for Robot Path Planning}\cite{MainWork}, která pojednává o problematice efektivního využití algoritmu A* pro plánování trasy robotů v průmyslu. Všechna data, tabulky a obrázky jsou využity z již zmíněného vycházející práce. Tento dokument je psán tak, aby důležité informace byly pochopitelné pro studenta 2. ročníku informatiky.
+
+Plánování trasy (angl. path planning) představuje jeden ze základních problému v oblasti robotiky. Cílem je nalést optimální cestu bez kolizí mezi počátečním a cílovým bodem v daném prostředí. Lze rozlišit dva hlavní přístupy plánování – \textbf{Offline} a \textbf{Online}
+
+Při \textbf{Offline} předpokládáme, že prostředí je předem známo a všechny překážky jsou nehybné, což umožňuje předání kompletní geometrie pracovního prostředí jakožto vstup algoritmu.
+
+Oproti tomu \textbf{Online} přístup využívá data ze senzorů v reálném čase a trajektorii vypočítává za běhu podle aktuální situace.
+
+Tento algoritmus se zaměřuje na offline plánování trasy v prostředí s pevně určenými překážkami.
+
+Mobilní roboti (autonomní robot, který za použití trasovacích algoritmů hledá optimální cestu) mohou využít různé typy algoritmů, jako např. genetické algoritmy, umělé neuronové sítě (ANN) či A* algoritmus, který bývá užíván nejčastěji. Kombinuje heuristický odhad s hodnotou náladů jednotlivých uzlů v mřížce, čímž umožnuje nalést řešení blízké optimu.
+
+Klasický A* algoritmus s sebou nese určité nevýhody - při větším počtu uzlů je výpočet časově náročný a jeho výkon výrazně klesá zejména při využití procesorů s nižším výpočetním výkonem. Autoři článku navrhují vylepšenou verzi A* algorimtu, která tyto problémy částečně eliminuje.
+
+Nový přístup počítá heuristickou funkci pouze těsně před kolizí, čímž se výrazně snižuje počet zbytečných výpočtů. Díky tomu lze algoritmus efektivně používat i na starších nebo méně vykonných zařízeních, aniž by ztratil klíčové vlastnosti původního A*.
+Při velkých vzdálenostech mezi počátečním a cíloým bodem lze dosáhnout zkrácení doby výpočtu až o 75 \% při minimálním prodloužení cesty.
 
 
+\section{Navrhovaný algoritmus a jeho podmínky}
 
-\section{Vývoj a použité technologie}
-[Popiš, jaké technologie nebo nástroje byly použity.]
+\subsection{Tvorba vstupních dat}
 
-\section{Implementace řešení}
+\subsection{Vzdálenostní kontrola}
 
-\section{Ovládání programu}
-[Vysvětli, jak se program používá, jaké má vstupy a výstupy.]
+\subsection{Výpočet náklonu a předpočet trasy}
+
+\subsection{Detekce kolize s překážkou}
+
+\subsection{Přechod na algoritmus A*}
 
 \section{Definované proměnné}
 [Vlož tabulku s proměnnými, pokud je potřeba.]
