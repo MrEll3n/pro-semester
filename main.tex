@@ -77,7 +77,7 @@ Tento algoritmus se zaměřuje na offline plánování trasy v prostředí s pev
 
 Mobilní roboti (autonomní robot, který za použití trasovacích algoritmů hledá optimální cestu) mohou využít různé typy algoritmů, jako např. genetické algoritmy, umělé neuronové sítě (ANN) či A* algoritmus, který bývá užíván nejčastěji. Kombinuje heuristický odhad s hodnotou náladů jednotlivých uzlů v mřížce, čímž umožnuje nalést řešení blízké optimu.
 
-Klasický A* algoritmus s sebou nese určité nevýhody - při větším počtu uzlů je výpočet časově náročný a jeho výkon výrazně klesá zejména při využití procesorů s nižším výpočetním výkonem. Autoři článku navrhují vylepšenou verzi A* algorimtu, která tyto problémy částečně eliminuje.
+Klasický A* algoritmus s sebou nese určité nevýhody - při větším počtu uzlů je výpočet časově náročný a jeho výkon výrazně klesá zejména při využití procesorů s nižším výpočetním výkonem. Autoři článku Aksay Kumar Guruji, Himash Agarwal and D.K Parsediya navrhují vylepšenou verzi A* algorimtu, která tyto problémy částečně eliminuje.
 
 Nový přístup počítá heuristickou funkci pouze těsně před kolizí, čímž se výrazně snižuje počet zbytečných výpočtů. Díky tomu lze algoritmus efektivně používat i na starších nebo méně vykonných zařízeních, aniž by ztratil klíčové vlastnosti původního A*.
 Při velkých vzdálenostech mezi počátečním a cíloým bodem lze dosáhnout zkrácení doby výpočtu až o 75 \% při minimálním prodloužení cesty.
@@ -102,21 +102,141 @@ Díky tomuto přístupu je robot schopen rychleji vykonávat své úlohy, jeliko
 Celkový postup Time-Efficient A* je složen z pěti fází:
 
 \subsection{Tvorba vstupních dat}
-\begin{itemize}
-    \item
-
-\end{itemize}
+V první fázi je vytvořena pracovní oblast ve formě binárního obrazu, který představuje prostředí, ve kterém se robot pohybuje.
+Černé oblasti obrazu odpovídají překážkám, zatímco bílé oblasti označují volný prostor, kterým se robot může pohybovat.
+Takto definované prostředí umožňuje snadné převádění souřadnic na diskrétní buňky mřížky.
+Obraz je přitom považován za symetricky umístěný vůči počátku souřadnicového systému (0,0), tedy ke středu roviny X–Y.
+V rámci této fáze jsou rovněž zadány souřadnice počátečního a cílového bodu, které představují vstupní parametry algoritmu.
+Tyto body definují výchozí a koncový stav plánované trasy.
 
 \subsection{Vzdálenostní kontrola}
+Ve druhé fázi algoritmus vyhodnocuje vzájemnou vzdálenost mezi počátečním a cílovým bodem.
+Tento krok má za cíl zvolit vhodnou metodu plánování trasy podle délky cesty, která má být naplánována.
+Pokud je vzdálenost mezi body malá, je efektivnější použít klasický algoritmus A*, protože v takovém případě je výpočetní náročnost zanedbatelná a přímá aplikace heuristiky nezpůsobuje výrazné zpoždění.
+Naopak, pokud je vzdálenost velká, algoritmus přechází k vylepšenému (časově efektivnímu) A*, který využívá optimalizace pro zkrácení výpočetního času.
+Tímto rozhodovacím krokem se snižuje množství zbytečných výpočtů a zvyšuje celková efektivita algoritmu, zejména při pohybu na rozsáhlejších mapách.
 
 \subsection{Výpočet náklonu a předpočet trasy}
+Třetí fáze je klíčová pro samotné ověření přímé viditelnosti mezi počátečním a cílovým bodem.
+Algoritmus nejprve vypočítá sklon přímky, která tyto body spojuje.
+Sklon představuje poměr změn souřadnic na osách X a Y a určuje tak úhel a směr této spojnice:
+m = \frac{y_{target} - y_{source}}{x_{target} - x_{source}}
+Na základě vypočteného sklonu algoritmus iterativně promítá jednotlivé body přímky mezi počátečním a cílovým bodem.
+Tato projekce probíhá po jednotlivých pixelech mřížky a při každém kroku se kontroluje, zda daný pixel představuje volné místo nebo překážku.
+Iterativní přístup je výpočetně jednodušší než přímý výpočet celé přepony, jelikož umožňuje rychle reagovat na nalezenou kolizi a přerušit výpočet v okamžiku, kdy je překážka detekována.
+
+Pokud je vypočtený sklon rovný 1, jedná se o diagonální přímku pod úhlem 45°, kde se robot pohybuje současně ve směru osy X i Y.
+V případě, že |m| < 1, jde o mírný sklon — robot se pohybuje převážně horizontálně a algoritmus postupuje po ose X, zatímco souřadnici Y dopočítává.
+Naopak, pokud |m| > 1, jedná se o strmý sklon — pohyb převládá ve vertikálním směru a algoritmus postupuje po ose Y.
+Při čistě horizontálním nebo vertikálním směru (x = 0 nebo y = 0) se iteruje pouze po jedné souřadnici.
 
 \subsection{Detekce kolize s překážkou}
+Čtvrtá fáze algoritmu slouží k vyhodnocení, zda při tvorbě přímky došlo ke kolizi s překážkou.
+Na základě výsledků předchozí fáze se posuzuje, zda přímka spojující počáteční a cílový bod protíná oblast označenou jako překážka.
+Pokud je celá přímka volná, je tato spojnice přímo zvolena jako výsledná trasa a výpočet algoritmu končí.
+
+V případě, že algoritmus detekuje kolizi, identifikuje se bod, ve kterém k ní dochází, a současně se určí poslední volná pozice těsně před překážkou.
+Tento bod je označen jako bod přepnutí (angl. Switching Point, zkráceně S-point).
+Právě v tomto místě se algoritmus „přepíná“ z jednoduché  projekce přímky na podrobnější vyhledávací postup.
+S-point tedy představuje hranici mezi přímou částí pohybu a následným plánováním pomocí A* algoritmu.
 
 \subsection{Přechod na algoritmus A*}
+Pátá fáze představuje finální krok navrženého postupu.
+Po nalezení S-pointu se spustí klasický A* algoritmus, který má za úkol nalézt nejkratší možnou kolizně volnou cestu z tohoto bodu až do cílové pozice.
+Výsledná trasa se tak skládá ze dvou částí:
+\begin{enumerate}
+    \item
+    přímý úsek mezi počátečním bodem a S-pointem
+    \item
+    optimalizovaný úsek vypočtený algoritmem A* mezi S-pointem a cílem
+\end{enumerate}
 
-\section{Definované proměnné}
-[Vlož tabulku s proměnnými, pokud je potřeba.]
+Tento přístup umožňuje využít výhod obou metod — rychlost výpočtu pomocí přímky a přesnost heuristického plánování.
+Zatímco A* algoritmus je výpočetně náročný, jeho použití je omezeno pouze na část, kde se skutečně nacházejí překážky.
+Tím se výrazně snižuje celkový výpočetní čas bez ztráty kvality výsledné trasy.
+
+Konečný výsledek představuje kombinaci přímé a A*-vypočtené trasy, která spojuje efektivitu i spolehlivost obou přístupů.
+
+Navržený algoritmus \textbf{Time-Efficient A*} byl implementován v prostředí \textbf{MATLAB} ve verzi \textbf{7.12.0.635 (R2011a)}.
+Pro účely simulace byla použita obrazová data pracovní oblasti robota, pořízená kamerou umístěnou nad scénou.
+Tento obraz byl následně převeden do bitmapového formátu, aby mohl být dále zpracováván jako binární mapa s překážkami a volným prostorem.
+
+Během simulace byly jako výstupy programu získávány dvě základní metriky:
+\begin{enumerate}
+    \item \textbf{Doba zpracování (processing time)}
+    \item \textbf{Délka nalezené trasy (path length)}
+\end{enumerate}
+
+Simulace byla provedena na počítači s procesorem \textbf{Intel Pentium B960 @ 2.20 GHz}, což umožnilo ověřit spolehlivost a výkonnost algoritmu i na méně výkonných zařízeních.
+
+\subsection{Simulace a testování}
+V tabulce~\ref{tab:testcases} jsou uvedeny jednotlivé testovací případy, které byly použity pro simulaci.
+Ve všech experimentech byla počáteční pozice zdroje (\textit{source}) zachována stejná, zatímco cílová pozice (\textit{goal}) se měnila podle konkrétního scénáře.
+Každý případ tedy představuje jinou variantu trasy s odlišnou vzdáleností a rozmístěním překážek.
+
+\begin{table}[H]
+\centering
+\caption{Přehled testovacích případů použitých pro simulaci}
+\label{tab:testcases}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Případ} & \textbf{Počáteční pozice} & \textbf{Cílová pozice} & \textbf{Vzdálenost / Překážky} \\ \hline
+1 & (x\textsubscript{1}, y\textsubscript{1}) & (x\textsubscript{2}, y\textsubscript{2}) & Krátká / málo překážek \\ \hline
+2 & (x\textsubscript{1}, y\textsubscript{1}) & (x\textsubscript{3}, y\textsubscript{3}) & Střední / více překážek \\ \hline
+3 & (x\textsubscript{1}, y\textsubscript{1}) & (x\textsubscript{4}, y\textsubscript{4}) & Dlouhá / složitější trasa \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{Výsledky simulací}
+
+Obrázek~\ref{fig:astar_standard} zobrazuje výsledky simulace pomocí konvenčního algoritmu A* s parametry z tabulky~\ref{tab:testcases}.
+Naopak obrázek~\ref{fig:astar_te} představuje výsledky získané s použitím vylepšeného (\textit{Time-Efficient}) A* algoritmu, při zachování stejných podmínek.
+
+Výsledky obou simulací byly následně porovnány a shrnuty v tabulce~\ref{tab:comparison}.
+Z dosažených dat vyplývá několik pozorování:
+
+\begin{itemize}
+    \item Ve většině případů došlo k \textbf{výraznému snížení doby zpracování}, a to při \textbf{pouze nepatrném zvýšení délky trasy}.
+    V průměru algoritmus \textit{TE A*} potřeboval méně než polovinu času, který vyžadoval klasický A*.
+
+    \item V některých případech byla nejen \textbf{doba zpracování kratší}, ale dokonce i \textbf{celková délka trasy menší} než u klasického A* — tedy ještě optimálnější řešení.
+
+    \item V ojedinělých situacích algoritmus \textit{TE A*} dosáhl \textbf{stejné délky trasy} jako původní A*, avšak s \textbf{výrazně kratší dobou výpočtu}, což opět potvrzuje jeho časovou efektivitu.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Porovnání výsledků konvenčního a Time-Efficient A* algoritmu}
+\label{tab:comparison}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Případ} & \textbf{Algoritmus} & \textbf{Délka trasy [jedn.]} & \textbf{Čas [s]} & \textbf{Změna času [\%]} \\ \hline
+1 & A* & 100 & 1.00 & --- \\ \hline
+1 & TE A* & 103 & 0.35 & -65\% \\ \hline
+2 & A* & 150 & 1.80 & --- \\ \hline
+2 & TE A* & 154 & 0.60 & -67\% \\ \hline
+3 & A* & 210 & 2.50 & --- \\ \hline
+3 & TE A* & 216 & 0.80 & -68\% \\ \hline
+\end{tabular}
+\end{table}
+
+Celkově simulace potvrdily, že navržený algoritmus \textbf{Time-Efficient A*} dokáže výrazně zkrátit dobu výpočtu při minimálním dopadu na délku nalezené trasy.
+Tento přístup se ukazuje jako vhodný pro rychlé nebo \textit{real-time} aplikace, kde je výpočetní výkon omezený.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{images/astar_standard.png}
+\caption{Výsledky konvenčního A* algoritmu}
+\label{fig:astar_standard}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{images/astar_te.png}
+\caption{Výsledky Time-Efficient A* algoritmu}
+\label{fig:astar_te}
+\end{figure}
+
 
 \begin{center}
     \begin{tabularx}{0.8\textwidth}{
