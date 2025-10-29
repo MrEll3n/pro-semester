@@ -3,7 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{enumitem}
-\usepackage{parskip}
+%\usepackage{parskip}
 \usepackage{tocloft}
 \usepackage{multicol}
 \usepackage[hidelinks]{hyperref}
@@ -14,6 +14,7 @@
 \usepackage{tabularx}
 \usepackage{cite}
 \usepackage{listings}
+\usepackage{graphicx}
 
 \begin{document}
 
@@ -65,7 +66,8 @@
 % =====================================
 
 \section{Úvod}
-Tato práce vychází ze článku \textit{Time-Efficient A* Algorithm for Robot Path Planning}\cite{MainWork}, která pojednává o problematice efektivního využití algoritmu A* pro plánování trasy robotů v průmyslu. Všechna data, tabulky a obrázky jsou využity z již zmíněného vycházející práce. Tento dokument je psán tak, aby důležité informace byly pochopitelné pro studenta 2. ročníku informatiky.
+
+Tato práce vychází ze článku \textit{Time-Efficient A* Algorithm for Robot Path Planning} \cite{MainWork}, která pojednává o problematice efektivního využití algoritmu A* pro plánování trasy robotů v průmyslu. Všechna data, tabulky a obrázky jsou využity z již zmíněného vycházející práce. Tento dokument je psán tak, aby důležité informace byly pochopitelné pro studenta 2. ročníku informatiky.
 
 Plánování trasy (angl. path planning) představuje jeden ze základních problému v oblasti robotiky. Cílem je nalést optimální cestu bez kolizí mezi počátečním a cílovým bodem v daném prostředí. Lze rozlišit dva hlavní přístupy plánování – \textbf{Offline} a \textbf{Online}
 
@@ -77,12 +79,12 @@ Tento algoritmus se zaměřuje na offline plánování trasy v prostředí s pev
 
 Mobilní roboti (autonomní robot, který za použití trasovacích algoritmů hledá optimální cestu) mohou využít různé typy algoritmů, jako např. genetické algoritmy, umělé neuronové sítě (ANN) či A* algoritmus, který bývá užíván nejčastěji. Kombinuje heuristický odhad s hodnotou náladů jednotlivých uzlů v mřížce, čímž umožnuje nalést řešení blízké optimu.
 
-Klasický A* algoritmus s sebou nese určité nevýhody - při větším počtu uzlů je výpočet časově náročný a jeho výkon výrazně klesá zejména při využití procesorů s nižším výpočetním výkonem. Autoři článku Aksay Kumar Guruji, Himash Agarwal and D.K Parsediya navrhují vylepšenou verzi A* algorimtu, která tyto problémy částečně eliminuje.
+Klasický A* algoritmus s sebou nese určité nevýhody - při větším počtu uzlů je výpočet časově náročný a jeho výkon výrazně klesá, zejména při využití procesorů s nižším výpočetním výkonem. Autoři článku Aksay Kumar Guruji, Himash Agarwal and D.K Parsediya navrhují vylepšenou verzi A* algorimtu, která tyto problémy částečně eliminuje.
 
 Nový přístup počítá heuristickou funkci pouze těsně před kolizí, čímž se výrazně snižuje počet zbytečných výpočtů. Díky tomu lze algoritmus efektivně používat i na starších nebo méně vykonných zařízeních, aniž by ztratil klíčové vlastnosti původního A*.
-Při velkých vzdálenostech mezi počátečním a cíloým bodem lze dosáhnout zkrácení doby výpočtu až o 75 \% při minimálním prodloužení cesty.
+Při velkých vzdálenostech mezi počátečním a cílovým bodem lze dosáhnout zkrácení doby výpočtu až o 75 \% při minimálním prodloužení cesty.
 
-
+\newpage
 \section{Navrhovaný algoritmus a jeho podmínky}
 Klasický A* algoritmus určuje nejkratší cestu mezi dvěma body v grafu (v našem případě v mřížce) na základě součtu dvou hodnot: \textbf{g(x)} a \textbf{h(x)}.
 
@@ -120,7 +122,7 @@ Tímto rozhodovacím krokem se snižuje množství zbytečných výpočtů a zvy
 Třetí fáze je klíčová pro samotné ověření přímé viditelnosti mezi počátečním a cílovým bodem.
 Algoritmus nejprve vypočítá sklon přímky, která tyto body spojuje.
 Sklon představuje poměr změn souřadnic na osách X a Y a určuje tak úhel a směr této spojnice:
-m = \frac{y_{target} - y_{source}}{x_{target} - x_{source}}
+$$ m = \frac{y_{target} - y_{source}}{x_{target} - x_{source}} $$
 Na základě vypočteného sklonu algoritmus iterativně promítá jednotlivé body přímky mezi počátečním a cílovým bodem.
 Tato projekce probíhá po jednotlivých pixelech mřížky a při každém kroku se kontroluje, zda daný pixel představuje volné místo nebo překážku.
 Iterativní přístup je výpočetně jednodušší než přímý výpočet celé přepony, jelikož umožňuje rychle reagovat na nalezenou kolizi a přerušit výpočet v okamžiku, kdy je překážka detekována.
@@ -140,6 +142,7 @@ Tento bod je označen jako bod přepnutí (angl. Switching Point, zkráceně S-p
 Právě v tomto místě se algoritmus „přepíná“ z jednoduché  projekce přímky na podrobnější vyhledávací postup.
 S-point tedy představuje hranici mezi přímou částí pohybu a následným plánováním pomocí A* algoritmu.
 
+\newpage
 \subsection{Přechod na algoritmus A*}
 Pátá fáze představuje finální krok navrženého postupu.
 Po nalezení S-pointu se spustí klasický A* algoritmus, který má za úkol nalézt nejkratší možnou kolizně volnou cestu z tohoto bodu až do cílové pozice.
@@ -157,6 +160,8 @@ Tím se výrazně snižuje celkový výpočetní čas bez ztráty kvality výsle
 
 Konečný výsledek představuje kombinaci přímé a A*-vypočtené trasy, která spojuje efektivitu i spolehlivost obou přístupů.
 
+\section{Simulace a výsledky}
+
 Navržený algoritmus \textbf{Time-Efficient A*} byl implementován v prostředí \textbf{MATLAB} ve verzi \textbf{7.12.0.635 (R2011a)}.
 Pro účely simulace byla použita obrazová data pracovní oblasti robota, pořízená kamerou umístěnou nad scénou.
 Tento obraz byl následně převeden do bitmapového formátu, aby mohl být dále zpracováván jako binární mapa s překážkami a volným prostorem.
@@ -169,7 +174,8 @@ Během simulace byly jako výstupy programu získávány dvě základní metriky
 
 Simulace byla provedena na počítači s procesorem \textbf{Intel Pentium B960 @ 2.20 GHz}, což umožnilo ověřit spolehlivost a výkonnost algoritmu i na méně výkonných zařízeních.
 
-\subsection{Simulace a testování}
+\newpage
+\subsection{Simulace a testy}
 V tabulce~\ref{tab:testcases} jsou uvedeny jednotlivé testovací případy, které byly použity pro simulaci.
 Ve všech experimentech byla počáteční pozice zdroje (\textit{source}) zachována stejná, zatímco cílová pozice (\textit{goal}) se měnila podle konkrétního scénáře.
 Každý případ tedy představuje jinou variantu trasy s odlišnou vzdáleností a rozmístěním překážek.
@@ -180,10 +186,14 @@ Každý případ tedy představuje jinou variantu trasy s odlišnou vzdálenost�
 \label{tab:testcases}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\textbf{Případ} & \textbf{Počáteční pozice} & \textbf{Cílová pozice} & \textbf{Vzdálenost / Překážky} \\ \hline
-1 & (x\textsubscript{1}, y\textsubscript{1}) & (x\textsubscript{2}, y\textsubscript{2}) & Krátká / málo překážek \\ \hline
-2 & (x\textsubscript{1}, y\textsubscript{1}) & (x\textsubscript{3}, y\textsubscript{3}) & Střední / více překážek \\ \hline
-3 & (x\textsubscript{1}, y\textsubscript{1}) & (x\textsubscript{4}, y\textsubscript{4}) & Dlouhá / složitější trasa \\ \hline
+\textbf{S. No.} & \textbf{Případ} & \textbf{Počáteční pozice robota} & \textbf{Konečná pozice robota} \\ \hline
+ &  & (souřadnice zdroje) & (souřadnice cíle) \\ \hline
+1 & 1 & Počátek = [5, 5] & Cíl = [90, 90] \\ \hline
+2 & 2 & Počátek = [5, 5] & Cíl = [70, 20] \\ \hline
+3 & 3 & Počátek = [5, 5] & Cíl = [40, 80] \\ \hline
+4 & 4 & Počátek = [5, 5] & Cíl = [70, 70] \\ \hline
+5 & 5 & Počátek = [5, 5] & Cíl = [35, 90] \\ \hline
+6 & 6 & Počátek = [5, 5] & Cíl = [50, 50] \\ \hline
 \end{tabular}
 \end{table}
 
@@ -197,62 +207,65 @@ Z dosažených dat vyplývá několik pozorování:
 
 \begin{itemize}
     \item Ve většině případů došlo k \textbf{výraznému snížení doby zpracování}, a to při \textbf{pouze nepatrném zvýšení délky trasy}.
-    V průměru algoritmus \textit{TE A*} potřeboval méně než polovinu času, který vyžadoval klasický A*.
+    V průměru algoritmus \textit{Time-Efficient A*} potřeboval méně než polovinu času, který vyžadoval klasický A*.
 
     \item V některých případech byla nejen \textbf{doba zpracování kratší}, ale dokonce i \textbf{celková délka trasy menší} než u klasického A* — tedy ještě optimálnější řešení.
 
-    \item V ojedinělých situacích algoritmus \textit{TE A*} dosáhl \textbf{stejné délky trasy} jako původní A*, avšak s \textbf{výrazně kratší dobou výpočtu}, což opět potvrzuje jeho časovou efektivitu.
+    \item V ojedinělých situacích algoritmus \textit{Time-Efficient A*} dosáhl \textbf{stejné délky trasy} jako původní A*, avšak s \textbf{výrazně kratší dobou výpočtu}, což opět potvrzuje jeho časovou efektivitu.
 \end{itemize}
 
 \begin{table}[H]
 \centering
-\caption{Porovnání výsledků konvenčního a Time-Efficient A* algoritmu}
+\caption{Porovnání výsledků konvenčního a časově efektivního algoritmu A*}
 \label{tab:comparison}
-\begin{tabular}{|c|c|c|c|c|}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{Případ} & \textbf{Algoritmus} & \textbf{Délka trasy [jedn.]} & \textbf{Čas [s]} & \textbf{Změna času [\%]} \\ \hline
-1 & A* & 100 & 1.00 & --- \\ \hline
-1 & TE A* & 103 & 0.35 & -65\% \\ \hline
-2 & A* & 150 & 1.80 & --- \\ \hline
-2 & TE A* & 154 & 0.60 & -67\% \\ \hline
-3 & A* & 210 & 2.50 & --- \\ \hline
-3 & TE A* & 216 & 0.80 & -68\% \\ \hline
-\end{tabular}
+\textbf{S. No.} &
+\multicolumn{2}{c|}{\textbf{Konvenční algoritmus A*}} &
+\multicolumn{2}{c|}{\textbf{Navržený algoritmus (T-E A*)}} &
+\multicolumn{2}{c|}{\textbf{Porovnání}} \\ \hline
+ & \textbf{Doba zpracování} & \textbf{Délka trasy} & \textbf{Doba zpracování} & \textbf{Délka trasy} &
+ \textbf{\% snížení doby} & \textbf{\% zvýšení délky} \\ \hline
+1 & 6.881205e+001 & 6.976955e+002 & 3.610599e+001 & 6.838391e+002 & 47.54 & 1.98 \\ \hline
+2 & 2.388457e+001 & 3.767767e+002 & 1.280379e+000 & 3.914363e+002 & 94.60 & 3.89 \\ \hline
+3 & 2.661417e+001 & 4.592031e+002 & 7.462159e+000 & 4.466063e+002 & 71.96 & 2.74 \\ \hline
+4 & 4.360535e+001 & 5.123402e+002 & 2.274836e+001 & 5.123402e+002 & 47.83 & 0.00 \\ \hline
+5 & 5.088388e+001 & 4.871320e+002 & 4.916487e+001 & 4.871320e+002 & 3.38 & 0.00 \\ \hline
+6 & 2.099893e+001 & 3.474874e+002 & 7.036298e+000 & 3.474874e+002 & 66.43 & 0.00 \\ \hline
+\end{tabular}%
+}
 \end{table}
 
+\newpage
 Celkově simulace potvrdily, že navržený algoritmus \textbf{Time-Efficient A*} dokáže výrazně zkrátit dobu výpočtu při minimálním dopadu na délku nalezené trasy.
 Tento přístup se ukazuje jako vhodný pro rychlé nebo \textit{real-time} aplikace, kde je výpočetní výkon omezený.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/astar_standard.png}
+\includegraphics[width=0.7\textwidth]{images/conventional_astar.png}
 \caption{Výsledky konvenčního A* algoritmu}
 \label{fig:astar_standard}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/astar_te.png}
+\includegraphics[width=0.7\textwidth]{images/proposed_astar.png}
 \caption{Výsledky Time-Efficient A* algoritmu}
 \label{fig:astar_te}
 \end{figure}
 
-
-\begin{center}
-    \begin{tabularx}{0.8\textwidth}{
-        | >{\raggedright\arraybackslash}X
-        | >{\raggedright\arraybackslash}X
-        | >{\raggedright\arraybackslash}X | }
-         \hline
-         Název & Paměťová adresa & Velikost [bajty] \\
-         \hline
-         [doplň údaje] &  &  \\
-         \hline
-    \end{tabularx}
-\end{center}
-
+\newpage
 \section{Závěr}
-[Zhodnoť výsledky své práce, popiš, co ses naučil a s jakými problémy ses potýkal.]
+Experimenty prokázaly, že navržený Time-Efficient A* algoritmus přináší výrazné zrychlení oproti původní implementaci.
+V průměru došlo ke zkrácení doby zpracování o 65 \%, přičemž v některých testovacích případech se podařilo dosáhnout až 95\% zlepšení.
+Zároveň se délka výsledné trasy prodloužila pouze o přibližně 3,4 \%, což lze považovat za zanedbatelný rozdíl vzhledem k výraznému zisku v rychlosti.
+
+Nejlepších výsledků bylo dosaženo v případech, kdy je vzdálenost mezi počátečním bodem a první překážkou poměrně velká.
+V takové situaci může algoritmus využít přímou projekci cesty bez nutnosti výpočtu heuristiky pro každý uzel, což vede k dalšímu snížení výpočetního zatížení.
+Oproti klasickému A* se tak eliminuje opakované vyhodnocování sousedních uzlů, které ve standardní verzi algoritmu výrazně zpomaluje běh programu.
+
+V porovnání se standardním A* nabízí Time-efficient A* optimální kompromis mezi přesností a výpočetní náročností, který se dá využít v aplikacích vyžadující rychlé reakce nebo při zpracováním v reálném čase, a to i ve výpočetně slabých zařízeních.
 
 \newpage
 \bibliographystyle{plain}
