@@ -77,7 +77,7 @@ Oproti tomu \textbf{Online} přístup využívá data ze senzorů v reálném č
 
 Tento algoritmus se zaměřuje na offline plánování trasy v prostředí s pevně určenými překážkami.
 
-Mobilní roboti (autonomní robot, který za použití trasovacích algoritmů hledá optimální cestu) mohou využít různé typy algoritmů, jako např. genetické algoritmy, umělé neuronové sítě (ANN) či A* algoritmus, který bývá užíván nejčastěji. Kombinuje heuristický odhad s hodnotou náladů jednotlivých uzlů v mřížce, čímž umožnuje nalést řešení blízké optimu.
+Mobilní roboti (autonomní robot, který za použití trasovacích algoritmů hledá optimální cestu) mohou využít různé typy algoritmů, jako např. genetické algoritmy, umělé neuronové sítě (ANN) či A* algoritmus, který bývá užíván nejčastěji. Kombinuje heuristický odhad s hodnotou náladů jednotlivých uzlů \newline v mřížce, čímž umožnuje nalést řešení blízké optimu.
 
 Klasický A* algoritmus s sebou nese určité nevýhody - při větším počtu uzlů je výpočet časově náročný a jeho výkon výrazně klesá, zejména při využití procesorů s nižším výpočetním výkonem. Autoři článku Aksay Kumar Guruji, Himash Agarwal and D.K Parsediya navrhují vylepšenou verzi A* algorimtu, která tyto problémy částečně eliminuje.
 
@@ -88,7 +88,7 @@ Při velkých vzdálenostech mezi počátečním a cílovým bodem lze dosáhnou
 \section{Navrhovaný algoritmus a jeho podmínky}
 Klasický A* algoritmus určuje nejkratší cestu mezi dvěma body v grafu (v našem případě v mřížce) na základě součtu dvou hodnot: \textbf{g(x)} a \textbf{h(x)}.
 
-Funkce \textbf{g(x)} představuje skutečné náklady cesty od počátečního bodu k aktuálnímu uzlu, zatímco \textbf{h(x)} je heuristický odhad vzdálenosti od aktuálního uzlu k cíli.\cite{WikiAStar}.
+Funkce \textbf{g(x)} představuje skutečné náklady cesty od počátečního bodu \newline k aktuálnímu uzlu, zatímco \textbf{h(x)} je heuristický odhad vzdálenosti od aktuálního uzlu k cíli.\cite{WikiAStar}.
 Celkovou hodnotu každého uzlu určuje vztah $f(x) = g(x) + h(x)$.
 Uzel $f(x)$ využijeme jako nový aktuální.
 
@@ -99,14 +99,14 @@ Vylepšený algoritmus, označovaný jako Time-Efficient A* (časově efektivní
 Hlavní rozdíl spočívá v tom, že funkce $g(x)$ je počítána pouze před detekcí kolize, zatímco kompletní $f(x)$ je počátán až těsně před a po kolizním bodě.
 
 Tím se eliminuje nutnost neustálého výpočtu heuristiky ve všech uzlech, což významě redukuje celkový výpočetní čas.
-Díky tomuto přístupu je robot schopen rychleji vykonávat své úlohy, jelikož algoritmus počítá samotný A* až v bodě, kdy je opravdu potřeba.
+Díky tomuto přístupu je robot schopen rychleji vykonávat své úlohy, jelikož algoritmus počítá samotný \newline A* až v bodě, kdy je opravdu potřeba.
 
 Celkový postup Time-Efficient A* je složen z pěti fází:
 
 \subsection{Tvorba vstupních dat}
 V první fázi je vytvořena pracovní oblast ve formě binárního obrazu, který představuje prostředí, ve kterém se robot pohybuje.
 Černé oblasti obrazu odpovídají překážkám, zatímco bílé oblasti označují volný prostor, kterým se robot může pohybovat.
-Takto definované prostředí umožňuje snadné převádění souřadnic na diskrétní buňky mřížky.
+Takto definované prostředí umožňuje snadné převádění souřadnic \newline na diskrétní buňky mřížky.
 Obraz je přitom považován za symetricky umístěný vůči počátku souřadnicového systému (0,0), tedy ke středu roviny X–Y.
 V rámci této fáze jsou rovněž zadány souřadnice počátečního a cílového bodu, které představují vstupní parametry algoritmu.
 Tyto body definují výchozí a koncový stav plánované trasy.
@@ -115,9 +115,10 @@ Tyto body definují výchozí a koncový stav plánované trasy.
 Ve druhé fázi algoritmus vyhodnocuje vzájemnou vzdálenost mezi počátečním a cílovým bodem.
 Tento krok má za cíl zvolit vhodnou metodu plánování trasy podle délky cesty, která má být naplánována.
 Pokud je vzdálenost mezi body malá, je efektivnější použít klasický algoritmus A*, protože v takovém případě je výpočetní náročnost zanedbatelná a přímá aplikace heuristiky nezpůsobuje výrazné zpoždění.
-Naopak, pokud je vzdálenost velká, algoritmus přechází k vylepšenému (časově efektivnímu) A*, který využívá optimalizace pro zkrácení výpočetního času.
+Naopak, pokud je vzdálenost velká, algoritmus přechází \newline k vylepšenému (časově efektivnímu) A*, který využívá optimalizace pro zkrácení výpočetního času.
 Tímto rozhodovacím krokem se snižuje množství zbytečných výpočtů a zvyšuje celková efektivita algoritmu, zejména při pohybu na rozsáhlejších mapách.
 
+\newpage
 \subsection{Výpočet náklonu a předpočet trasy}
 Třetí fáze je klíčová pro samotné ověření přímé viditelnosti mezi počátečním a cílovým bodem.
 Algoritmus nejprve vypočítá sklon přímky, která tyto body spojuje.
@@ -128,17 +129,17 @@ Tato projekce probíhá po jednotlivých pixelech mřížky a při každém krok
 Iterativní přístup je výpočetně jednodušší než přímý výpočet celé přepony, jelikož umožňuje rychle reagovat na nalezenou kolizi a přerušit výpočet v okamžiku, kdy je překážka detekována.
 
 Pokud je vypočtený sklon rovný 1, jedná se o diagonální přímku pod úhlem 45°, kde se robot pohybuje současně ve směru osy X i Y.
-V případě, že |m| < 1, jde o mírný sklon — robot se pohybuje převážně horizontálně a algoritmus postupuje po ose X, zatímco souřadnici Y dopočítává.
-Naopak, pokud |m| > 1, jedná se o strmý sklon — pohyb převládá ve vertikálním směru a algoritmus postupuje po ose Y.
-Při čistě horizontálním nebo vertikálním směru (x = 0 nebo y = 0) se iteruje pouze po jedné souřadnici.
+V případě, že $|m| < 1$, jde o mírný sklon — robot se pohybuje převážně horizontálně a algoritmus postupuje po ose X, zatímco souřadnici Y dopočítává.
+Naopak, pokud $|m| > 1$, jedná se o strmý sklon — pohyb převládá ve vertikálním směru a algoritmus postupuje po ose Y.
+Při čistě horizontálním nebo vertikálním směru ($x = 0$ nebo $y = 0$) se iteruje pouze po jedné souřadnici.
 
 \subsection{Detekce kolize s překážkou}
 Čtvrtá fáze algoritmu slouží k vyhodnocení, zda při tvorbě přímky došlo ke kolizi s překážkou.
 Na základě výsledků předchozí fáze se posuzuje, zda přímka spojující počáteční a cílový bod protíná oblast označenou jako překážka.
-Pokud je celá přímka volná, je tato spojnice přímo zvolena jako výsledná trasa a výpočet algoritmu končí.
+Pokud je celá přímka volná, je tato spojnice přímo zvolena jako výsledná trasa \newline a výpočet algoritmu končí.
 
-V případě, že algoritmus detekuje kolizi, identifikuje se bod, ve kterém k ní dochází, a současně se určí poslední volná pozice těsně před překážkou.
-Tento bod je označen jako bod přepnutí (angl. Switching Point, zkráceně S-point).
+V případě, že algoritmus detekuje kolizi, identifikuje se bod, ve kterém \newline k ní dochází, a současně se určí poslední volná pozice těsně před překážkou.
+Tento bod je označen jako bod přepnutí (angl. Switching Point, zkráceně \newline S-point).
 Právě v tomto místě se algoritmus „přepíná“ z jednoduché  projekce přímky na podrobnější vyhledávací postup.
 S-point tedy představuje hranici mezi přímou částí pohybu a následným plánováním pomocí A* algoritmu.
 
@@ -162,7 +163,7 @@ Konečný výsledek představuje kombinaci přímé a A*-vypočtené trasy, kter
 
 \section{Simulace a výsledky}
 
-Navržený algoritmus \textbf{Time-Efficient A*} byl implementován v prostředí \textbf{MATLAB} ve verzi \textbf{7.12.0.635 (R2011a)}.
+Navržený algoritmus \textbf{Time-Efficient A*} byl implementován v prostředí \newline\textbf{MATLAB} ve verzi \textbf{7.12.0.635 (R2011a)}.
 Pro účely simulace byla použita obrazová data pracovní oblasti robota, pořízená kamerou umístěnou nad scénou.
 Tento obraz byl následně převeden do bitmapového formátu, aby mohl být dále zpracováván jako binární mapa s překážkami a volným prostorem.
 
@@ -172,7 +173,7 @@ Během simulace byly jako výstupy programu získávány dvě základní metriky
     \item \textbf{Délka nalezené trasy (path length)}
 \end{enumerate}
 
-Simulace byla provedena na počítači s procesorem \textbf{Intel Pentium B960 @ 2.20 GHz}, což umožnilo ověřit spolehlivost a výkonnost algoritmu i na méně výkonných zařízeních.
+Simulace byla provedena na počítači s procesorem \newline\textbf{Intel~Pentium~B960~@~2.20~GHz}, což umožnilo ověřit spolehlivost a výkonnost algoritmu i na méně výkonných zařízeních.
 
 \newpage
 \subsection{Simulace a testy}
