@@ -1,0 +1,104 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{tocloft}
+\usepackage{multicol}
+\usepackage[hidelinks]{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{mathtools}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{cite}
+\usepackage{listings}
+
+\begin{document}
+
+% =====================================
+% Titulní strana
+% =====================================
+\begin{titlepage}
+    \includegraphics[width=0.80\textwidth]{images/fav.pdf}
+    \begin{center}
+        \vspace{2cm}
+
+        \LARGE
+        Semestrální práce z KIV/PRO
+
+        \Huge
+        \textbf{Časově efektivní algoritmus A* pro plánování trasy robota}
+
+        \vspace{1cm}
+
+        \vfill
+
+        \vspace{0.5cm}
+
+        \normalsize
+        \raggedright
+        Autor: Vít Novotný \hfill Datum: \today
+
+        \vspace{0.2cm}
+
+    \end{center}
+\end{titlepage}
+
+\thispagestyle{empty}
+\pagebreak
+
+% =====================================
+% Obsah
+% =====================================
+\setcounter{page}{2}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsubsecleader}{\cftdotfill{\cftdotsep}}
+
+\tableofcontents
+\pagebreak
+
+% =====================================
+% Tělo dokumentu
+% =====================================
+
+\section{Úvod}
+Tato práce vychází ze článku \textit{Time-Efficient A* Algorithm for Robot Path Planning}\cite{MainWork}, která pojednává o problematice efektivního využití algoritmu A* pro plánování trasy robotů v průmyslu. Tento dokument je psán tak, aby důležité informace byly pochopitelné pro studenta 2. ročníku informatiky.
+
+
+
+\section{Vývoj a použité technologie}
+[Popiš, jaké technologie nebo nástroje byly použity.]
+
+\section{Implementace řešení}
+
+\section{Ovládání programu}
+[Vysvětli, jak se program používá, jaké má vstupy a výstupy.]
+
+\section{Definované proměnné}
+[Vlož tabulku s proměnnými, pokud je potřeba.]
+
+\begin{center}
+    \begin{tabularx}{0.8\textwidth}{
+        | >{\raggedright\arraybackslash}X
+        | >{\raggedright\arraybackslash}X
+        | >{\raggedright\arraybackslash}X | }
+         \hline
+         Název & Paměťová adresa & Velikost [bajty] \\
+         \hline
+         [doplň údaje] &  &  \\
+         \hline
+    \end{tabularx}
+\end{center}
+
+\section{Závěr}
+[Zhodnoť výsledky své práce, popiš, co ses naučil a s jakými problémy ses potýkal.]
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{citations}
+
+
+\end{document}
