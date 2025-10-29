@@ -84,8 +84,28 @@ Při velkých vzdálenostech mezi počátečním a cíloým bodem lze dosáhnout
 
 
 \section{Navrhovaný algoritmus a jeho podmínky}
+Klasický A* algoritmus určuje nejkratší cestu mezi dvěma body v grafu (v našem případě v mřížce) na základě součtu dvou hodnot: \textbf{g(x)} a \textbf{h(x)}.
+
+Funkce \textbf{g(x)} představuje skutečné náklady cesty od počátečního bodu k aktuálnímu uzlu, zatímco \textbf{h(x)} je heuristický odhad vzdálenosti od aktuálního uzlu k cíli.\cite{WikiAStar}.
+Celkovou hodnotu každého uzlu určuje vztah $f(x) = g(x) + h(x)$.
+Uzel $f(x)$ využijeme jako nový aktuální.
+
+Tento přístup zaručuje nalezení optimální nebo téměř optimální cesty, ale může být značně výpočetně náročný, zejména pokud je prostředí rozsáhlé nebo obsahuje mnoho překážek.
+
+Vylepšený algoritmus, označovaný jako Time-Efficient A* (časově efektivní A*) algoritmus, se snaží tento problém řešit a snížit výpočetní náročnost.
+
+Hlavní rozdíl spočívá v tom, že funkce $g(x)$ je počítána pouze před detekcí kolize, zatímco kompletní $f(x)$ je počátán až těsně před a po kolizním bodě.
+
+Tím se eliminuje nutnost neustálého výpočtu heuristiky ve všech uzlech, což významě redukuje celkový výpočetní čas.
+Díky tomuto přístupu je robot schopen rychleji vykonávat své úlohy, jelikož algoritmus počítá samotný A* až v bodě, kdy je opravdu potřeba.
+
+Celkový postup Time-Efficient A* je složen z pěti fází:
 
 \subsection{Tvorba vstupních dat}
+\begin{itemize}
+    \item
+
+\end{itemize}
 
 \subsection{Vzdálenostní kontrola}
 
